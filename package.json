@@ -1,0 +1,22 @@
+{
+    "name": "webapi2",
+    "version": "1.0.0",
+    "description": "",
+    "main": "Games.js",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1",
+        "client-install": "npm install --prefix client",
+        "start": "node Games.js",
+        "server": "nodemon Games.js",
+        "client": "npm start --prefix client",
+        "dev": "concurrently \"npm run server\" \"npm run client\""
+    },
+    "author": "cx",
+    "license": "ISC",
+    "dependencies": {
+        "axios": "^0.19.0",
+        "concurrently": "^4.1.2",
+        "express": "^4.17.1",
+        "mongoose": "^5.7.1"
+    }
+}
