@@ -15,6 +15,24 @@ class App extends Component {
     this.handleSubmit = this.handleSubmit.bind(this);
   }
 
+  findgame(e) {
+
+    const query = `/findgame?name=${this.game.value}`;
+    console.log(query);
+    e.preventDefault();
+
+    axios.get(query).then(result => {
+
+      this.setState({ movies: result.data });
+      console.log(this.state.movies);
+
+    }).catch(error => {
+
+      console.log(error);
+    })
+
+  };
+
   getAllMovies = () => {
     axios
       .get("/games")
@@ -82,7 +100,7 @@ class App extends Component {
           <p>Search for games</p>
         </div>
         <div className="container search">
-          <div className="col-sm-12">
+          <div className="col-sm-6">
             <p />
             <form onSubmit={this.handleSubmit}>
               <label>Enter movie title:</label>
@@ -96,6 +114,22 @@ class App extends Component {
             </form>
             <p />
           </div>
+          
+          <div className="col-sm-6">
+            <p />
+            <form onSubmit={this.findgame}>
+              <label>Find Game title:</label>
+              <input
+                type="text"
+                class="form-control"
+                ref={input => (this.game = input)}
+              />
+              <p />
+              <input type="submit" value="Submit" />
+            </form>
+            <p />
+          </div>
+
           <div>
             <Popup />
           </div>

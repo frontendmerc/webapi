@@ -63,5 +63,36 @@ app.get('/games', (req, res) => {
 
 });
 
+//find game in APi
+app.get('/findgame', (req, res) => {
+
+    res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000');
+    const name = req.query.name;
+
+    axios({
+
+        url: "https://api-v3.igdb.com/games",
+        method: 'POST',
+        headers: {
+
+            Accept: "application/json",
+            "user-key": API_KEY
+        },
+
+        data: `fields *; search "${name}";`
+
+    }).then(result => {
+
+        res.status(200).json(result.data);
+        console.log(result);
+    
+    }).catch(error => {
+
+        res.status(400).json(error);
+        console.log(error);
+    })
+});
+
+
 
 app.listen(5000);
