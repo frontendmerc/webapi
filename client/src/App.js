@@ -13,9 +13,10 @@ class App extends Component {
       movies: []
     };
     this.handleSubmit = this.handleSubmit.bind(this);
+    this.findGame = this.findGame.bind(this);
   }
 
-  findgame(e) {
+  findGame(e) {
 
     const query = `/findgame?name=${this.game.value}`;
     console.log(query);
@@ -24,7 +25,7 @@ class App extends Component {
     axios.get(query).then(result => {
 
       this.setState({ movies: result.data });
-      console.log(this.state.movies);
+      //console.log(this.state.movies);
 
     }).catch(error => {
 
@@ -46,11 +47,6 @@ class App extends Component {
   };
   componentDidMount() {
     this.getAllMovies();
-
-    fetch("/games")
-      .then(res => {
-        console.log(res.json());
-      })
   }
 
   handleSubmit(e) {
@@ -72,18 +68,18 @@ class App extends Component {
       });
   }
 
-  // deleteRecord = value => {
-  //   console.log("to delete: ", value);
-  //   const query = `/deletemovie?title=${value}`;
-  //   axios
-  //     .get(query)
-  //     .then(result => {
-  //       this.getAllMovies();
-  //     })
-  //     .catch(error => {
-  //       alert("Error: ", error);
-  //     });
-  // };
+  deleteRecord = value => {
+    console.log("to delete: ", value);
+    const query = `/delete?id=${value}`;
+    axios
+      .get(query)
+      .then(result => {
+        this.getAllMovies();
+      })
+      .catch(error => {
+        alert("Error: ", error);
+      });
+  };
 
   //https://www.codementor.io/blizzerand/building-forms-using-react-everything-you-need-to-know-iz3eyoq4y
   //todo add buttons to delete rows
@@ -114,10 +110,10 @@ class App extends Component {
             </form>
             <p />
           </div>
-          
+
           <div className="col-sm-6">
             <p />
-            <form onSubmit={this.findgame}>
+            <form onSubmit={this.findGame}>
               <label>Find Game title:</label>
               <input
                 type="text"
@@ -148,7 +144,21 @@ class App extends Component {
                 {
                   Header: "Name",
                   accessor: "name"
+                },{
+                  Header: "Delete",
+                  accessor: "id",
+
+                  Cell: ({value}) => (
+                    <a
+                    onClick={() => {
+                      this.deleteRecord(value);
+                    }}
+                  >
+                    Delete
+                  </a>
+                  )
                 }
+
               ]}
               defaultPageSize={5}
               className="-striped -highlight"

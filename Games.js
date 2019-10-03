@@ -85,7 +85,7 @@ app.get('/findgame', (req, res) => {
 
         res.status(200).json(result.data);
         console.log(result);
-    
+
     }).catch(error => {
 
         res.status(400).json(error);
@@ -93,6 +93,21 @@ app.get('/findgame', (req, res) => {
     })
 });
 
+app.get('/delete', (req, res) => {
+
+    res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000');
+    const id = req.query.id;
+
+    Game.deleteOne({ id: `${id}` }).then(response => {
+
+            res.status(200).json(response);
+            console.log(`${id} Deleted`);
+        }).catch(err => {
+            res.status(400).json(err);
+            console.log(err);
+        })
+
+});
 
 
 app.listen(5000);
