@@ -5,7 +5,7 @@ const Game = require('./database');
 
 const API_KEY = "5865e092b3bb33ca3807c709e8f3abeb";
 
-//add game to database
+//get game from API and add to database
 app.get('/create', (req, res) => {
 
     res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000');
@@ -25,21 +25,54 @@ app.get('/create', (req, res) => {
 
     }).then(result => {
 
-        const game = new Game({
-            id: result.data[0].id,
-            name: result.data[0].name
-        });
+        // const game = new Game({
+        //     id: result.data[0].id,
+        //     name: result.data[0].name,
+        //     screenshot: result.data[0].screenshots[0]
+        // });
 
-        if (!game.id) {
-            res.status(200).json("Not Found");
-            return;
-        }
+        // if (!game.id) {
+        //     res.status(200).json("Not Found");
+        //     return;
+        // }
 
-        game.save().then(response => {
-            res.status(200).json(response);
-        }).catch(error => {
-            res.status(400).json(error);
-        });
+        axios({
+
+            url: "https://api-v3.igdb.com/screenshots",
+            method: 'POST',
+            headers: {
+
+                Accept: "application/json",
+                "user-key": API_KEY
+            },
+
+            data: `fields *; where id = ${result.data[0].screenshots[0]};`
+
+        }).then(imgResult => {
+
+            const game = new Game({
+                id: result.data[0].id,
+                name: result.data[0].name,
+                screenshot: imgResult.data[0].url
+            });
+
+            if (!game.id) {
+                res.status(200).json("Not Found");
+                return;
+            }
+
+            game.save().then(response => {
+                res.status(200).json(response);
+            }).catch(error => {
+                res.status(400).json(error);
+            });
+
+
+        }).catch(err => {
+            res.status(400).json(err);
+        })
+
+
 
     }).catch(err => {
 
@@ -93,6 +126,7 @@ app.get('/findgame', (req, res) => {
     })
 });
 
+//delete game from database
 app.get('/delete', (req, res) => {
 
     res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000');
@@ -100,12 +134,12 @@ app.get('/delete', (req, res) => {
 
     Game.deleteOne({ id: `${id}` }).then(response => {
 
-            res.status(200).json(response);
-            console.log(`${id} Deleted`);
-        }).catch(err => {
-            res.status(400).json(err);
-            console.log(err);
-        })
+        res.status(200).json(response);
+        console.log(`${id} Deleted`);
+    }).catch(err => {
+        res.status(400).json(err);
+        console.log(err);
+    })
 
 });
 

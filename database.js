@@ -11,6 +11,9 @@ const schema = new mongoose.Schema({
     },
     name: {
         type: String
+    },
+    screenshot:{
+        type: String
     }
 
 });
