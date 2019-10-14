@@ -3,6 +3,7 @@
 }
 
 .App-logo {
+  animation: App-logo-spin infinite 20s linear;
   height: 40vmin;
 }
 
@@ -18,17 +19,23 @@
 }
 
 .App-link {
-  color: #09d3ac;
+  color: #61dafb;
 }
 
-.header { 
+@keyframes App-logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
 
+.header {
   background-color: rgb(159, 187, 247);
-
 }
 
-.search { 
-
-  background-color: rgb(241, 241, 169);
-
+.jumbotron {
+  height: 250px;
+  background-color: rgb(236, 134, 240);
 }

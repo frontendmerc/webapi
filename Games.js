@@ -11,6 +11,7 @@ app.get('/create', (req, res) => {
     res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000');
     const id = req.query.id;
 
+    //get the game's id
     axios({
 
         url: "https://api-v3.igdb.com/games",
@@ -25,17 +26,7 @@ app.get('/create', (req, res) => {
 
     }).then(result => {
 
-        // const game = new Game({
-        //     id: result.data[0].id,
-        //     name: result.data[0].name,
-        //     screenshot: result.data[0].screenshots[0]
-        // });
-
-        // if (!game.id) {
-        //     res.status(200).json("Not Found");
-        //     return;
-        // }
-
+        //use the game's id to search the game's image/screenshot
         axios({
 
             url: "https://api-v3.igdb.com/screenshots",
@@ -61,6 +52,7 @@ app.get('/create', (req, res) => {
                 return;
             }
 
+            //save in database(mongodb)
             game.save().then(response => {
                 res.status(200).json(response);
             }).catch(error => {
@@ -71,8 +63,6 @@ app.get('/create', (req, res) => {
         }).catch(err => {
             res.status(400).json(err);
         })
-
-
 
     }).catch(err => {
 
