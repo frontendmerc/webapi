@@ -86,8 +86,25 @@ app.get('/games', (req, res) => {
 
 });
 
-//find game in APi
 app.get('/findgame', (req, res) => {
+
+    res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000');
+
+    const name = req.query.name;
+
+    Game.find({ name: new RegExp(name, 'i') })
+        .then(response => {
+
+            res.status(200).json(response);
+        }).catch(error => {
+
+            res.status(400).json(error);
+        });
+
+});
+
+//find game in APi
+app.get('/findgameAPI', (req, res) => {
 
     res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000');
     const name = req.query.name;

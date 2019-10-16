@@ -77,12 +77,22 @@ class App extends Component {
             });
     };
 
-    onFindGame = e =>{
+    onFindGame = e => {
 
         e.preventDefault();
-        this.setState({alertVisible: false});
+        this.setState({ alertVisible: false });
 
-        
+        const query = `/findgame?name=${this.state.title}`;
+        console.log(query);
+
+        axios.get(query).
+            then(result => {
+
+                this.setState({ movies: result.data });
+                console.log(result.state.movies);
+            }).catch(err => {
+                console.log(err);
+            });
 
     }
 
@@ -161,19 +171,19 @@ class App extends Component {
                     </Row>
                     <Row>
                         <Col>
-                            {/* <Form onSubmit={this.onFindGame}>
+                            <Form onSubmit={this.onFindGame}>
                                 <FormGroup>
                                     <Label for="title">Find Game</Label>
                                     <Input
                                         type="text"
                                         name="title"
-                                        id="title"
+                                        id="findGame"
                                         placeholder="enter game title..."
                                         onChange={this.onChange}
                                     />
                                 </FormGroup>
                                 <Button color="primary">Submit</Button>
-                            </Form> */}
+                            </Form>
                         </Col>
 
                         <Col>
@@ -197,7 +207,7 @@ class App extends Component {
                                             <Button color="primary">Submit</Button>
                                         </Form>
 
-                                    </ModalBody>                                
+                                    </ModalBody>
                                 </Modal>
                             </div>
 
