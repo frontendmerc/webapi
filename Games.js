@@ -9,7 +9,7 @@ const API_KEY = "5865e092b3bb33ca3807c709e8f3abeb";
 app.get('/create', (req, res) => {
 
     res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000');
-    const id = req.query.id;
+    const name = req.query.name;
 
     //get the game's id
     axios({
@@ -22,7 +22,7 @@ app.get('/create', (req, res) => {
             "user-key": API_KEY
         },
 
-        data: `fields *; where id = ${id};`
+        data: `fields *; search "${name}"; limit 1;`
 
     }).then(result => {
 
@@ -102,7 +102,7 @@ app.get('/findgame', (req, res) => {
             "user-key": API_KEY
         },
 
-        data: `fields *; search "${name}";`
+        data: `fields *; search "${name}"; limit 1;`
 
     }).then(result => {
 

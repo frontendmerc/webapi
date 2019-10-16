@@ -14,7 +14,15 @@ import {
     Label,
     Input,
     FormText
-  } from 'reactstrap';
+} from 'reactstrap';
+
+import {
+
+    Modal,
+    ModalHeader,
+    ModalBody,
+    ModalFooter
+} from 'reactstrap';
 
 class App extends Component {
     constructor() {
@@ -22,12 +30,21 @@ class App extends Component {
         this.state = {
             alertVisible: false,
             title: '',
-            movies: [{ screenshot: '', name: 'hello', id: 1 }]
+            movies: [{ screenshot: '', name: 'hello', id: 1 }],
+            modal: false
         };
 
         this.onChange = this.onChange.bind(this);
         this.onSubmit = this.onSubmit.bind(this);
+        this.onFindGame = this.onFindGame.bind(this);
         this.onDismiss = this.onDismiss.bind(this);
+        this.toggle = this.toggle.bind(this);
+    }
+
+    toggle = () => {
+        this.setState({
+            modal: !this.state.modal
+        });
     }
 
     //for popup
@@ -41,7 +58,7 @@ class App extends Component {
         this.setState({ alertVisible: false });
         //console.log(this.state.title);
 
-        const query = `/create?id=${this.state.title}`;
+        const query = `/create?name=${this.state.title}`;
         console.log(this.state.title);
 
         console.log(query);
@@ -59,6 +76,15 @@ class App extends Component {
                 alert('Error: ', error);
             });
     };
+
+    onFindGame = e =>{
+
+        e.preventDefault();
+        this.setState({alertVisible: false});
+
+        
+
+    }
 
     // for form field
     onChange(e) {
@@ -119,8 +145,8 @@ class App extends Component {
             <div className="App">
                 <Container>
                     <Jumbotron>
-                        <h1 className="display-4">Movie Search</h1>
-                        <p className="lead">Search for movies</p>
+                        <h1 className="display-4">Game Search</h1>
+                        <p className="lead">Search for game</p>
                     </Jumbotron>
                     <Row>
                         <Col>
@@ -135,9 +161,9 @@ class App extends Component {
                     </Row>
                     <Row>
                         <Col>
-                            <Form onSubmit={this.onSubmit}>
+                            {/* <Form onSubmit={this.onFindGame}>
                                 <FormGroup>
-                                    <Label for="title">Enter Game title</Label>
+                                    <Label for="title">Find Game</Label>
                                     <Input
                                         type="text"
                                         name="title"
@@ -147,10 +173,37 @@ class App extends Component {
                                     />
                                 </FormGroup>
                                 <Button color="primary">Submit</Button>
-                            </Form>
+                            </Form> */}
                         </Col>
 
-                    </Row>                    
+                        <Col>
+                            <div>
+                                <Button color="danger" onClick={this.toggle}>Request a game</Button>
+                                <Modal isOpen={this.state.modal} toggle={this.toggle} className="modaltest">
+                                    <ModalHeader toggle={this.toggle}>Request a game</ModalHeader>
+                                    <ModalBody>
+
+                                        <Form onSubmit={this.onSubmit}>
+                                            <FormGroup>
+                                                <Label for="title">Add a Game</Label>
+                                                <Input
+                                                    type="text"
+                                                    name="title"
+                                                    id="title"
+                                                    placeholder="enter game title..."
+                                                    onChange={this.onChange}
+                                                />
+                                            </FormGroup>
+                                            <Button color="primary">Submit</Button>
+                                        </Form>
+
+                                    </ModalBody>                                
+                                </Modal>
+                            </div>
+
+                        </Col>
+
+                    </Row>
                     <Row>
                         {gameCards}
                     </Row>

@@ -51,7 +51,17 @@ export class GameCard extends Component {
         this.setState({
             nested: !this.state.nested,
             close: true
-        })
+        });
+    }
+
+    delete = () =>{
+
+        this.setState({
+            nested: !this.state.nested,
+            close: false
+        });
+
+        this.props.removeGame(this.props.games.id);
     }
 
     render() {
@@ -66,13 +76,6 @@ export class GameCard extends Component {
                         <CardTitle>{this.props.games.name}</CardTitle>
                         <CardText>{this.props.games.id}</CardText>
 
-                        <Button
-                            color="primary"
-                            onClick={() => this.props.removeGame(this.props.games.id)}
-                        >
-                            Delete
-                        </Button>
-
                         <div>
                             <Button color="danger" onClick={this.toggle}>Modal Test</Button>
                             <Modal isOpen={this.state.modal} toggle={this.toggle} className="modaltest">
@@ -82,13 +85,13 @@ export class GameCard extends Component {
 
                                     <br />
 
-                                    <Button color="success" onClick={this.toggleNested}>Show Nested Modal</Button>
+                                    <Button color="danger" onClick={this.toggleNested}>Delete</Button>
 
                                     <Modal isOpen={this.state.nested} toggle={this.toggleNested} onClosed={this.state.close ? this.toggle : undefined}>
-                                        <ModalHeader>Nested Modal title</ModalHeader>
-                                        <ModalBody>Stuff and things</ModalBody>
+                                        <ModalHeader>Delete</ModalHeader>
+                                        <ModalBody>Do you want to delete this?</ModalBody>
                                         <ModalFooter>
-                                            <Button color="primary" onClick={this.toggleNested}>Done</Button>{' '}
+                                            <Button color="primary" onClick={this.delete}>Done</Button>{' '}
                                         </ModalFooter>
                                     </Modal>
 
