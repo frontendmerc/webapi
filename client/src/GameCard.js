@@ -7,7 +7,9 @@ import {
     CardBody,
     CardTitle,
     CardSubtitle,
-    Button
+    Button,
+    Row,
+    Col
 } from 'reactstrap';
 
 import {
@@ -18,7 +20,7 @@ import {
     ModalFooter
 } from 'reactstrap';
 
-import { testFunction, editText } from './control'
+import { testFunction, editText, mousein, mouseout } from './control'
 
 export class GameCard extends Component {
     constructor(props) {
@@ -79,6 +81,14 @@ export class GameCard extends Component {
         editText();
     }
 
+    handleHover = () => {
+        mousein(this.props.games.id);
+    }    
+    
+    handleHoverOut = () => {
+        mouseout(this.props.games.id);
+    }
+
 
     render() {
 
@@ -127,65 +137,72 @@ export class GameCard extends Component {
         return (
 
             <div>
-                <Card>
-                    <CardImg top width="20%" src={this.props.games.cover} alt="Card image cap" />
-                    <CardBody>
+                <Card onMouseOver={this.handleHover} onMouseOut={this.handleHoverOut} id={"a"+this.props.games.id}>
+                    <CardImg class="cardImage" onClick={this.toggle} top width="20%" src={this.props.games.cover} alt="Card image cap" />
+                    <p class="cardtitle"> {this.props.games.name}</p>
+                    <div>
+                        <Modal isOpen={this.state.modal} toggle={this.toggle} className="modaltest">
+                            <ModalHeader toggle={this.toggle}>{this.props.games.name}</ModalHeader>
 
-                        <CardTitle>{this.props.games.name}</CardTitle>
-                        <CardText>{this.props.games.id}</CardText>
+                            <ModalBody>
 
-                        <div>
-                            <Button color="danger" onClick={this.toggle}>Modal Test</Button>
-                            <Modal isOpen={this.state.modal} toggle={this.toggle} className="modaltest">
-                                <ModalHeader toggle={this.toggle}>{this.props.games.name}</ModalHeader>
-                                <ModalBody>
-                                    <img src={this.props.games.cover} width="100%" />
-                                    <br />
-                                    <Button color="danger" onClick={this.toggleNested}>Delete</Button>
-                                    <Button color="primary" onClick={this.openEdit}>Edit</Button>
-                                    <br />
+                                <Row>
 
-                                    <textarea id="textarea" disabled width="100%" >{this.props.games.summary}</textarea>
-                                    <br />
+                                    <Col>
+                                        <img src={this.props.games.cover} width="100%" />
+                                        <br />
+                                        <Button color="danger" onClick={this.toggleNested}>Delete</Button>
+                                        <Button color="primary" onClick={this.openEdit}>Edit</Button>
+                                        <br />
+                                    </Col>
 
-                                    <div>
-                                        <div id="platformDiv">
-                                            <PlatformList platform={this.props.games.platform} />
+                                    <Col>
+                                        <h5>Summary</h5>
+                                        <textarea id="textarea" disabled  >{this.props.games.summary}</textarea>
+                                        <br />
+
+                                        <div>
+                                            <h5>Platform</h5>
+                                            <div id="platformDiv">
+                                                <PlatformList platform={this.props.games.platform} />
+                                            </div>
+                                            <div id="editPlatformDiv">
+                                                <input id="platformInput" type="text" name="plattform" defaultValue={this.props.games.platform}></input>
+                                            </div>
+
                                         </div>
-                                        <div id="editPlatformDiv">
-                                            <input id="platformInput" type="text" name="plattform" defaultValue={this.props.games.platform}></input>
+
+                                        <h5>Release Date</h5>
+                                        <TimeStamp timeStamp={this.props.games.first_release_date} />
+
+                                        <div>
+                                            <h5>Genres</h5>
+                                            <div id="genresDiv">
+                                                <GenresList genres={this.props.games.genres} />
+                                            </div>
+                                            <div id="editGenresDiv">
+                                                <input id="genresInput" type="text" name="genres" defaultValue={this.props.games.genres}></input>
+                                            </div>
                                         </div>
 
-                                    </div>
+                                        <Modal isOpen={this.state.nested} toggle={this.toggleNested} onClosed={this.state.close ? this.toggle : undefined}>
+                                            <ModalHeader>Delete</ModalHeader>
+                                            <ModalBody>Do you want to delete this?</ModalBody>
+                                            <ModalFooter>
+                                                <Button color="primary" onClick={this.delete}>Done</Button>{' '}
+                                            </ModalFooter>
+                                        </Modal>
+                                    </Col>
 
-                                    <TimeStamp timeStamp={this.props.games.first_release_date} />
+                                </Row>
 
-                                    <div>
-                                        <div id="genresDiv">
-                                            <GenresList genres={this.props.games.genres} />
-                                        </div>
-                                        <div id="editGenresDiv">
-                                            <input id="genresInput" type="text" name="genres" defaultValue={this.props.games.genres}></input>
-                                        </div>
-                                    </div>
-
-                                    <Modal isOpen={this.state.nested} toggle={this.toggleNested} onClosed={this.state.close ? this.toggle : undefined}>
-                                        <ModalHeader>Delete</ModalHeader>
-                                        <ModalBody>Do you want to delete this?</ModalBody>
-                                        <ModalFooter>
-                                            <Button color="primary" onClick={this.delete}>Done</Button>{' '}
-                                        </ModalFooter>
-                                    </Modal>
-
-                                </ModalBody>
-                                <ModalFooter>
-                                    <Button id="saveBtn" color="success" onClick={this.edit}>Save</Button>{' '}
-                                    <Button color="secondary" onClick={this.toggle}>Cancel</Button>
-                                </ModalFooter>
-                            </Modal>
-                        </div>
-
-                    </CardBody>
+                            </ModalBody>
+                            <ModalFooter>
+                                <Button id="saveBtn" color="success" onClick={this.edit}>Save</Button>{' '}
+                                <Button color="secondary" onClick={this.toggle}>Cancel</Button>
+                            </ModalFooter>
+                        </Modal>
+                    </div>
                 </Card>
             </div>
 

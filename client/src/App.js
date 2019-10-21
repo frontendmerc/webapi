@@ -65,7 +65,7 @@ class App extends Component {
                 console.log(result.data);
                 if (result.data === 'Not found') {
                     this.setState({ alertVisible: true });
-                }else if(result.data === 'This game already exist in the database'){
+                } else if (result.data === 'This game already exist in the database') {
                     alert(result.data);
                 }
                 this.getAllMovies();
@@ -118,6 +118,11 @@ class App extends Component {
         this.getAllMovies();
     }
 
+    // //execute after compoenent has mount
+    // componentDidUpdate(){
+    //     test();
+    // }
+
     deleteRecord = value => {
         console.log("to delete: ", value);
         const query = `/delete?id=${value}`;
@@ -159,7 +164,7 @@ class App extends Component {
                 <Col xs="4">
                     <GameCard
                         removeGame={this.deleteRecord.bind(this)}
-                        editGame ={this.editRecord.bind(this)}
+                        editGame={this.editRecord.bind(this)}
                         games={games}
                     />
                 </Col>
@@ -197,10 +202,12 @@ class App extends Component {
                                 onChange={this.onFindGame}
                             />
                         </Col>
-
+                    </Row>
+                    
+                    <Row>
                         <Col>
                             <div>
-                                <Button color="danger" onClick={this.toggle}>Request a game</Button>
+                                <Button color="success" onClick={this.toggle}>Request a game</Button>
                                 <Modal isOpen={this.state.modal} toggle={this.toggle} className="modaltest">
                                     <ModalHeader toggle={this.toggle}>Request a game</ModalHeader>
                                     <ModalBody>
@@ -224,8 +231,8 @@ class App extends Component {
                             </div>
 
                         </Col>
-
                     </Row>
+
                     <Row>
                         {gameCards}
                     </Row>

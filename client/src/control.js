@@ -28,3 +28,13 @@ export function editText(){
     document.getElementById("editGenresDiv").style.display = "block";
     document.getElementById("genresDiv").style.display = "none";
 }
+
+export function mousein(id){
+    document.querySelector("#a"+ id + " > p").style.display = "block";
+
+}
+
+export function mouseout(id){
+    document.querySelector("#a"+ id + " > p").style.display = "none";
+
+}
