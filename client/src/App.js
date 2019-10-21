@@ -56,12 +56,8 @@ class App extends Component {
     onSubmit = e => {
         e.preventDefault();
         this.setState({ alertVisible: false });
-        //console.log(this.state.title);
 
         const query = `/create?name=${this.state.title}`;
-        console.log(this.state.title);
-
-        console.log(query);
 
         axios
             .get(query)
@@ -69,6 +65,8 @@ class App extends Component {
                 console.log(result.data);
                 if (result.data === 'Not found') {
                     this.setState({ alertVisible: true });
+                }else if(result.data === 'This game already exist in the database'){
+                    alert(result.data);
                 }
                 this.getAllMovies();
             })
@@ -82,7 +80,7 @@ class App extends Component {
         e.preventDefault();
         this.setState({ alertVisible: false });
 
-        const query = `/findgame?name=${this.state.title}`;
+        const query = `/findgame?name=${e.target.value}`;
         console.log(query);
 
         axios.get(query).
@@ -101,6 +99,7 @@ class App extends Component {
         this.setState({
             [e.target.name]: e.target.value
         });
+
     }
 
     getAllMovies = () => {
@@ -132,6 +131,22 @@ class App extends Component {
             });
     };
 
+    editRecord = (id, value, platform, genres) => {
+
+        const query = `/update?id=${id}&text=${value}&platform=${platform}&genres=${genres}`;
+        console.log(query);
+        axios
+            .get(query)
+            .then(result => {
+                this.getAllMovies();
+                console.log("updated");
+            }).catch(error => {
+
+                alert("Error:" + error);
+            });
+
+    };
+
     //https://www.codementor.io/blizzerand/building-forms-using-react-everything-you-need-to-know-iz3eyoq4y
     //todo add buttons to delete rows
     //https://codepen.io/aaronschwartz/pen/awOyQq?editors=0010
@@ -144,6 +159,7 @@ class App extends Component {
                 <Col xs="4">
                     <GameCard
                         removeGame={this.deleteRecord.bind(this)}
+                        editGame ={this.editRecord.bind(this)}
                         games={games}
                     />
                 </Col>
@@ -171,19 +187,15 @@ class App extends Component {
                     </Row>
                     <Row>
                         <Col>
-                            <Form onSubmit={this.onFindGame}>
-                                <FormGroup>
-                                    <Label for="title">Find Game</Label>
-                                    <Input
-                                        type="text"
-                                        name="title"
-                                        id="findGame"
-                                        placeholder="enter game title..."
-                                        onChange={this.onChange}
-                                    />
-                                </FormGroup>
-                                <Button color="primary">Submit</Button>
-                            </Form>
+
+                            <Label for="title">Find Game</Label>
+                            <Input
+                                type="text"
+                                name="title"
+                                id="findGame"
+                                placeholder="enter game title..."
+                                onChange={this.onFindGame}
+                            />
                         </Col>
 
                         <Col>

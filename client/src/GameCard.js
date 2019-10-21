@@ -18,6 +18,8 @@ import {
     ModalFooter
 } from 'reactstrap';
 
+import { testFunction, editText } from './control'
+
 export class GameCard extends Component {
     constructor(props) {
         super(props);
@@ -29,7 +31,7 @@ export class GameCard extends Component {
 
         this.toggle = this.toggle.bind(this);
         this.toggleNested = this.toggleNested.bind(this);
-        this.toggleAll = this .toggleAll.bind(this);
+        this.toggleAll = this.toggleAll.bind(this);
 
     }
 
@@ -54,7 +56,7 @@ export class GameCard extends Component {
         });
     }
 
-    delete = () =>{
+    delete = () => {
 
         this.setState({
             nested: !this.state.nested,
@@ -64,13 +66,69 @@ export class GameCard extends Component {
         this.props.removeGame(this.props.games.id);
     }
 
+    edit = () => {
+
+        console.log(this.props);
+        var resultArray = testFunction();
+        console.log(resultArray);
+        this.props.editGame(this.props.games.id, resultArray[0], resultArray[1], resultArray[2]);
+    }
+
+    openEdit = () => {
+
+        editText();
+    }
+
+
     render() {
+
+        function PlatformList(props) {
+            const numbers = props.platform;
+            const listItems = numbers.map((number) =>
+                <li>{number}</li>
+            );
+            return (
+                <ul>{listItems}</ul>
+            );
+        }
+
+        function TimeStamp(props) {
+
+            // Months array
+            var months_arr = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+            // Convert timestamp to milliseconds
+            var date = new Date(props.timeStamp * 1000);
+            // Year
+            var year = date.getFullYear();
+            // Month
+            var month = months_arr[date.getMonth()];
+            // Day
+            var day = date.getDate();
+
+            // Display date time in MM-dd-yyyy format
+            var formattedTime = day + '-' + month + '-' + year;
+
+            return (
+                <p>{formattedTime}</p>
+            );
+        }
+
+        function GenresList(props) {
+
+            const numbers = props.genres;
+            const listItems = numbers.map((number) =>
+                <li>{number}</li>
+            );
+            return (
+                <ul>{listItems}</ul>
+            );
+        }
 
         return (
 
             <div>
                 <Card>
-                    <CardImg top width="20%" src={this.props.games.screenshot} alt="Card image cap" />
+                    <CardImg top width="20%" src={this.props.games.cover} alt="Card image cap" />
                     <CardBody>
 
                         <CardTitle>{this.props.games.name}</CardTitle>
@@ -81,11 +139,35 @@ export class GameCard extends Component {
                             <Modal isOpen={this.state.modal} toggle={this.toggle} className="modaltest">
                                 <ModalHeader toggle={this.toggle}>{this.props.games.name}</ModalHeader>
                                 <ModalBody>
-                                    <img src={this.props.games.screenshot} width="100%" />
-
+                                    <img src={this.props.games.cover} width="100%" />
+                                    <br />
+                                    <Button color="danger" onClick={this.toggleNested}>Delete</Button>
+                                    <Button color="primary" onClick={this.openEdit}>Edit</Button>
                                     <br />
 
-                                    <Button color="danger" onClick={this.toggleNested}>Delete</Button>
+                                    <textarea id="textarea" disabled width="100%" >{this.props.games.summary}</textarea>
+                                    <br />
+
+                                    <div>
+                                        <div id="platformDiv">
+                                            <PlatformList platform={this.props.games.platform} />
+                                        </div>
+                                        <div id="editPlatformDiv">
+                                            <input id="platformInput" type="text" name="plattform" defaultValue={this.props.games.platform}></input>
+                                        </div>
+
+                                    </div>
+
+                                    <TimeStamp timeStamp={this.props.games.first_release_date} />
+
+                                    <div>
+                                        <div id="genresDiv">
+                                            <GenresList genres={this.props.games.genres} />
+                                        </div>
+                                        <div id="editGenresDiv">
+                                            <input id="genresInput" type="text" name="genres" defaultValue={this.props.games.genres}></input>
+                                        </div>
+                                    </div>
 
                                     <Modal isOpen={this.state.nested} toggle={this.toggleNested} onClosed={this.state.close ? this.toggle : undefined}>
                                         <ModalHeader>Delete</ModalHeader>
@@ -97,7 +179,7 @@ export class GameCard extends Component {
 
                                 </ModalBody>
                                 <ModalFooter>
-                                    <Button color="primary" onClick={this.toggle}>Do Something</Button>{' '}
+                                    <Button id="saveBtn" color="success" onClick={this.edit}>Save</Button>{' '}
                                     <Button color="secondary" onClick={this.toggle}>Cancel</Button>
                                 </ModalFooter>
                             </Modal>

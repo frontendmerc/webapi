@@ -12,7 +12,22 @@ const schema = new mongoose.Schema({
     name: {
         type: String
     },
-    screenshot:{
+    cover:{
+        type: String
+    },
+    platform:[{
+        type: String
+    }],
+    summary:{
+        type: String
+    },
+    genres:[{
+        type: String
+    }],
+    first_release_date:{
+        type: Number
+    },
+    companies:{
         type: String
     }
 
