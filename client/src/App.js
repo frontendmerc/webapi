@@ -13,11 +13,10 @@ import {
     FormGroup,
     Label,
     Input,
-    FormText
-} from 'reactstrap';
-
-import {
-
+    FormText,
+    Pagination,
+    PaginationItem,
+    PaginationLink,
     Modal,
     ModalHeader,
     ModalBody,
@@ -31,7 +30,10 @@ class App extends Component {
             alertVisible: false,
             title: '',
             movies: [{ screenshot: '', name: 'hello', id: 1 }],
-            modal: false
+            modal: false,
+            currentPage: 1,
+            todosPerPage: 3,
+            todos: ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k']
         };
 
         this.onChange = this.onChange.bind(this);
@@ -39,6 +41,7 @@ class App extends Component {
         this.onFindGame = this.onFindGame.bind(this);
         this.onDismiss = this.onDismiss.bind(this);
         this.toggle = this.toggle.bind(this);
+        this.handleClick = this.handleClick.bind(this);
     }
 
     toggle = () => {
@@ -152,6 +155,12 @@ class App extends Component {
 
     };
 
+    handleClick(event) {
+        this.setState({
+            currentPage: Number(event.target.id)
+        });
+    }
+
     //https://www.codementor.io/blizzerand/building-forms-using-react-everything-you-need-to-know-iz3eyoq4y
     //todo add buttons to delete rows
     //https://codepen.io/aaronschwartz/pen/awOyQq?editors=0010
@@ -172,8 +181,52 @@ class App extends Component {
             )
         });
 
+        const { movies, currentPage, todosPerPage } = this.state;
+
+        // Logic for displaying todos
+        const indexOfLastTodo = currentPage * todosPerPage;
+        const indexOfFirstTodo = indexOfLastTodo - todosPerPage;
+        const currentTodos = movies.slice(indexOfFirstTodo, indexOfLastTodo);
+
+        const renderTodos = currentTodos.map((movies, index) => {
+            return (
+                <Col xs="4">
+                    <GameCard
+                        removeGame={this.deleteRecord.bind(this)}
+                        editGame={this.editRecord.bind(this)}
+                        games={movies}
+                    />
+                </Col>
+
+            );
+        });
+
+        // Logic for displaying page numbers
+        const pageNumbers = [];
+        for (let i = 1; i <= Math.ceil(movies.length / todosPerPage); i++) {
+            pageNumbers.push(i);
+        }
+
+        const renderPageNumbers = pageNumbers.map(number => {
+            return (
+                <li
+                    key={number}
+                    id={number}
+                    onClick={this.handleClick}
+                >
+                    {number}
+                </li>
+            );
+        });
+
         return (
+
+
+
             <div className="App">
+
+
+
                 <Container>
                     <Jumbotron>
                         <h1 className="display-4">Game Search</h1>
@@ -203,7 +256,7 @@ class App extends Component {
                             />
                         </Col>
                     </Row>
-                    
+
                     <Row>
                         <Col>
                             <div>
@@ -234,8 +287,20 @@ class App extends Component {
                     </Row>
 
                     <Row>
-                        {gameCards}
+                        <div>
+                            <ul>
+                                <Row>
+                                    {renderTodos}
+                                </Row>
+                                
+                            </ul>
+                            <ul id="page-numbers">
+                                {renderPageNumbers}
+                            </ul>
+                        </div>
+                        {/* {gameCards} */}
                     </Row>
+
                 </Container>
             </div>
         );
