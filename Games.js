@@ -174,7 +174,7 @@ app.get('/games', (req, res) => {
 
     res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000');
 
-    Game.find({}).then(response => {
+    Game.find({}).sort({'_id': -1}).then(response => {
 
         res.status(200).json(response);
     }).catch(error => {

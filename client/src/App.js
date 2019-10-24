@@ -32,8 +32,7 @@ class App extends Component {
             movies: [{ screenshot: '', name: 'hello', id: 1 }],
             modal: false,
             currentPage: 1,
-            todosPerPage: 3,
-            todos: ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k']
+            todosPerPage: 3
         };
 
         this.onChange = this.onChange.bind(this);
@@ -76,6 +75,8 @@ class App extends Component {
             .catch(error => {
                 alert('Error: ', error);
             });
+
+            this.toggle();
     };
 
     onFindGame = e => {
@@ -167,20 +168,6 @@ class App extends Component {
     //https://github.com/react-tools/react-table/issues/324
     render() {
 
-        let gameCards = this.state.movies.map(games => {
-
-            return (
-                <Col xs="4">
-                    <GameCard
-                        removeGame={this.deleteRecord.bind(this)}
-                        editGame={this.editRecord.bind(this)}
-                        games={games}
-                    />
-                </Col>
-
-            )
-        });
-
         const { movies, currentPage, todosPerPage } = this.state;
 
         // Logic for displaying todos
@@ -220,12 +207,7 @@ class App extends Component {
         });
 
         return (
-
-
-
             <div className="App">
-
-
 
                 <Container>
                     <Jumbotron>
@@ -287,7 +269,7 @@ class App extends Component {
                     </Row>
 
                     <Row>
-                        <div>
+                        <div class="page-items">
                             <ul>
                                 <Row>
                                     {renderTodos}
@@ -298,7 +280,6 @@ class App extends Component {
                                 {renderPageNumbers}
                             </ul>
                         </div>
-                        {/* {gameCards} */}
                     </Row>
 
                 </Container>

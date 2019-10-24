@@ -39,3 +39,16 @@
   height: 250px;
   background-color: rgb(236, 134, 240);
 }
+
+#page-numbers >li{
+  border: 1px solid black;
+  padding: 5px 10px;
+}
+
+#page-numbers{
+  justify-content: center;
+}
+
+.page-items{
+  width:100%;
+}
