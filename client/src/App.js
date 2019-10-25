@@ -13,14 +13,9 @@ import {
     FormGroup,
     Label,
     Input,
-    FormText,
-    Pagination,
-    PaginationItem,
-    PaginationLink,
     Modal,
     ModalHeader,
-    ModalBody,
-    ModalFooter
+    ModalBody
 } from 'reactstrap';
 
 class App extends Component {
@@ -76,7 +71,7 @@ class App extends Component {
                 alert('Error: ', error);
             });
 
-            this.toggle();
+        this.toggle();
     };
 
     onFindGame = e => {
@@ -84,17 +79,22 @@ class App extends Component {
         e.preventDefault();
         this.setState({ alertVisible: false });
 
-        const query = `/findgame?name=${e.target.value}`;
-        console.log(query);
+        if (e.target.value == "") {
 
-        axios.get(query).
-            then(result => {
+            this.getAllMovies();
+        } else {
+            const query = `/findgame?name=${e.target.value}`;
 
-                this.setState({ movies: result.data });
-                console.log(result.state.movies);
-            }).catch(err => {
-                console.log(err);
-            });
+            axios.get(query).
+                then(result => {
+
+                    this.setState({ movies: result.data });
+                    console.log(result.data);
+
+                }).catch(err => {
+                    console.log(err);
+                });
+        }
 
     }
 
@@ -121,11 +121,6 @@ class App extends Component {
     componentDidMount() {
         this.getAllMovies();
     }
-
-    // //execute after compoenent has mount
-    // componentDidUpdate(){
-    //     test();
-    // }
 
     deleteRecord = value => {
         console.log("to delete: ", value);
@@ -206,6 +201,25 @@ class App extends Component {
             );
         });
 
+        function HasGame(){
+            if(movies.length == 0){
+                
+                return(
+                    
+                    <div class="noGameDiv">
+
+                        <img src="http://pm1.narvii.com/6688/d91c5f2917fe35c3862d2b2a8a2fc91c89e16450_00.jpg">
+                            
+                        </img>
+                        <p>No result is found</p>
+                    </div>
+                
+                );
+            }
+
+            return(<br></br>);
+        }
+
         return (
             <div className="App">
 
@@ -226,21 +240,17 @@ class App extends Component {
                         </Col>
                     </Row>
                     <Row>
-                        <Col>
-
-                            <Label for="title">Find Game</Label>
+                        <Col sm="9">
                             <Input
                                 type="text"
                                 name="title"
                                 id="findGame"
-                                placeholder="enter game title..."
+                                placeholder="Search a game title..."
                                 onChange={this.onFindGame}
                             />
                         </Col>
-                    </Row>
 
-                    <Row>
-                        <Col>
+                        <Col sm="3">
                             <div>
                                 <Button color="success" onClick={this.toggle}>Request a game</Button>
                                 <Modal isOpen={this.state.modal} toggle={this.toggle} className="modaltest">
@@ -269,12 +279,13 @@ class App extends Component {
                     </Row>
 
                     <Row>
+                        <HasGame></HasGame>
                         <div class="page-items">
                             <ul>
                                 <Row>
                                     {renderTodos}
                                 </Row>
-                                
+
                             </ul>
                             <ul id="page-numbers">
                                 {renderPageNumbers}
